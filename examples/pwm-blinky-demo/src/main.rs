@@ -13,6 +13,9 @@ use nrf52832_hal as hal;
 use nrf52840_hal as hal;
 #[cfg(feature = "9160")]
 use nrf9160_hal as hal;
+#[cfg(feature = "9120")]
+use nrf9120_hal as hal;
+
 use rtt_target::{rprintln, rtt_init_print};
 
 #[panic_handler] // panicking behavior
@@ -43,7 +46,7 @@ fn main() -> ! {
     }
 }
 
-#[cfg(feature = "9160")]
+#[cfg(any(feature = "9160", feature = "9120"))]
 fn init_device(p: hal::pac::Peripherals) -> (Pwm<hal::pac::PWM0_NS>, Timer<hal::pac::TIMER0_NS>) {
     let p0 = gpio::p0::Parts::new(p.P0_NS);
 

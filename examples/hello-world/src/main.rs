@@ -7,6 +7,8 @@
 use nrf52840_hal as hal;
 #[cfg(feature = "9160")]
 use nrf9160_hal as hal;
+#[cfg(feature = "9120")]
+use nrf9120_hal as hal;
 
 use core::fmt::Write;
 use hal::{gpio, uarte, uarte::Uarte};
@@ -28,7 +30,7 @@ fn main() -> ! {
             },
         )
     };
-    #[cfg(feature = "9160")]
+    #[cfg(any(feature = "9160", feature = "9120"))]
     let (uart0, cdc_pins) = {
         let p0 = gpio::p0::Parts::new(p.P0_NS);
         (

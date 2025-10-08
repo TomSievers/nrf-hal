@@ -26,10 +26,10 @@
 //! let _saadc_result = saadc.read_channel(&mut saadc_pin);
 //! ```
 
-#[cfg(any(feature = "9160", feature = "5340-app"))]
+#[cfg(any(feature = "9160", feature = "9120", feature = "5340-app"))]
 use crate::pac::{saadc_ns as saadc, SAADC_NS as SAADC};
 
-#[cfg(not(any(feature = "9160", feature = "5340-app")))]
+#[cfg(not(any(feature = "9160", feature = "9120", feature = "5340-app")))]
 use crate::pac::{saadc, SAADC};
 
 use core::sync::atomic::{compiler_fence, Ordering::SeqCst};
@@ -117,7 +117,7 @@ impl Saadc {
             5 => self.0.ch[0].pselp.write(|w| w.pselp().analog_input5()),
             6 => self.0.ch[0].pselp.write(|w| w.pselp().analog_input6()),
             7 => self.0.ch[0].pselp.write(|w| w.pselp().analog_input7()),
-            #[cfg(not(feature = "9160"))]
+            #[cfg(not(any(feature = "9160", feature = "9120")))]
             8 => self.0.ch[0].pselp.write(|w| w.pselp().vdd()),
             #[cfg(any(feature = "52833", feature = "52840"))]
             13 => self.0.ch[0].pselp.write(|w| w.pselp().vddhdiv5()),
@@ -258,7 +258,7 @@ macro_rules! channel_mappings {
     };
 }
 
-#[cfg(feature = "9160")]
+#[cfg(any(feature = "9160", feature = "9120"))]
 channel_mappings! {
     0 => P0_13,
     1 => P0_14,

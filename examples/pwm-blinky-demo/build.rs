@@ -11,7 +11,7 @@
 fn main() {
     // We only need the memory.x file for the nRF9160 as our program
     // must then reside in a location where unsecure programs need to be.
-    #[cfg(feature = "9160")]
+    #[cfg(any(feature = "9160", feature = "9120"))]
     {
         use std::env;
         use std::fs::File;

@@ -1,9 +1,9 @@
 //! Configuration and control of the High and Low Frequency Clock sources.
 
-#[cfg(any(feature = "9160", feature = "5340-app", feature = "5340-net"))]
+#[cfg(any(feature = "9160", feature = "9120", feature = "5340-app", feature = "5340-net"))]
 use crate::pac::CLOCK_NS as CLOCK;
 
-#[cfg(not(any(feature = "9160", feature = "5340-app", feature = "5340-net")))]
+#[cfg(not(any(feature = "9160", feature = "9120", feature = "5340-app", feature = "5340-net")))]
 use crate::pac::CLOCK;
 
 // ZST Type States
@@ -161,7 +161,7 @@ impl<H, L> Clocks<H, L, LfOscStopped> {
 
     /// Use the internal RC Oscillator for the low frequency clock source.
     #[cfg(not(any(
-        feature = "9160",
+        feature = "9160", feature = "9120",
         feature = "5340-app",
         feature = "5340-net",
         feature = "51"
@@ -180,7 +180,7 @@ impl<H, L> Clocks<H, L, LfOscStopped> {
 
     /// Generate the Low Frequency clock from the high frequency clock source.
     #[cfg(not(any(
-        feature = "9160",
+        feature = "9160", feature = "9120",
         feature = "5340-app",
         feature = "5340-net",
         feature = "51"
@@ -199,7 +199,7 @@ impl<H, L> Clocks<H, L, LfOscStopped> {
 
     /// Use an external crystal to drive the low frequency clock.
     #[cfg(not(any(
-        feature = "9160",
+        feature = "9160", feature = "9120",
         feature = "5340-app",
         feature = "5340-net",
         feature = "51"
