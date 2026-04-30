@@ -119,6 +119,8 @@ impl Saadc {
             7 => self.0.ch[0].pselp.write(|w| w.pselp().analog_input7()),
             #[cfg(not(any(feature = "9160", feature = "9120")))]
             8 => self.0.ch[0].pselp.write(|w| w.pselp().vdd()),
+            #[cfg(any(feature = "9160", feature = "9120"))]
+            8 => self.0.ch[0].pselp.write(|w| w.pselp().vddgpio()),
             #[cfg(any(feature = "52833", feature = "52840"))]
             13 => self.0.ch[0].pselp.write(|w| w.pselp().vddhdiv5()),
             // This can never happen with the `Channel` implementations provided, as the only analog
@@ -270,7 +272,7 @@ channel_mappings! {
     7 => P0_20,
 }
 
-#[cfg(not(feature = "9160"))]
+#[cfg(not(any(feature = "9160", feature = "9120")))]
 channel_mappings! {
     0 => P0_02,
     1 => P0_03,
@@ -282,7 +284,7 @@ channel_mappings! {
     7 => P0_31,
 }
 
-#[cfg(all(not(feature = "9160"), feature = "embedded-hal-02"))]
+#[cfg(all(not(any(feature = "9160", feature = "9120")), feature = "embedded-hal-02"))]
 impl embedded_hal_02::adc::Channel<Saadc> for InternalVdd {
     type ID = u8;
 
@@ -291,7 +293,7 @@ impl embedded_hal_02::adc::Channel<Saadc> for InternalVdd {
     }
 }
 
-#[cfg(not(feature = "9160"))]
+#[cfg(not(any(feature = "9160", feature = "9120")))]
 impl Channel for InternalVdd {
     #[cfg(not(feature = "embedded-hal-02"))]
     fn channel() -> u8 {
@@ -299,9 +301,30 @@ impl Channel for InternalVdd {
     }
 }
 
-#[cfg(not(feature = "9160"))]
+#[cfg(not(any(feature = "9160", feature = "9120")))]
 /// Channel that doesn't sample a pin, but the internal VDD voltage.
 pub struct InternalVdd;
+
+#[cfg(all(any(feature = "9160", feature = "9120"), feature = "embedded-hal-02"))]
+impl embedded_hal_02::adc::Channel<Saadc> for VddGpio {
+    type ID = u8;
+
+    fn channel() -> u8 {
+        8
+    }
+}
+
+#[cfg(any(feature = "9160", feature = "9120"))]
+impl Channel for VddGpio {
+    #[cfg(not(feature = "embedded-hal-02"))]
+    fn channel() -> u8 {
+        8
+    }
+}
+
+#[cfg(any(feature = "9160", feature = "9120"))]
+/// Channel connected to VddGpio
+pub struct VddGpio;
 
 #[cfg(all(any(feature = "52833", feature = "52840"), feature = "embedded-hal-02"))]
 impl embedded_hal_02::adc::Channel<Saadc> for InternalVddHdiv5 {
