@@ -480,7 +480,7 @@ pub struct Pins {
     pub rts: Option<Pin<Output<PushPull>>>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Error {
     TxBufferTooSmall,
     RxBufferTooSmall,
